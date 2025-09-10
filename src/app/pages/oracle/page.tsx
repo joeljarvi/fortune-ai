@@ -1,15 +1,30 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import SparklesBackground from "@/app/components/SparklesBackground";
 import CrystalBall from "@/app/components/CrystalBall";
+import { Music } from "lucide-react"
 import type { FortuneRequest, FortuneResponse } from "@/types/fortune"; 
 
 export default function Home() {
   const [question, setQuestion] = useState<string>("");
   const [fortune, setFortune] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const toggleMusic = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play();
+      setIsPlaying(true);
+    }
+  };
 
   const askFortune = async () => {
     if (!question) return;
@@ -68,6 +83,28 @@ export default function Home() {
       >
         {loading ? "Konsulterar andarna..." : "Visa spådom"}
       </button>
+
+      <button
+        onClick={toggleMusic}
+        className={`absolute top-4 left-4 p-3 rounded-full bg-purple-700 hover:bg-purple-800 shadow-[0_0_12px_#a855f7] hover:shadow-[0_0_20px_#c084fc] transition-all flex items-center justify-center z-50`}
+        aria-label={isPlaying ? "Stäng av musiken" : "Spela mystisk musik"}
+        title={isPlaying ? "Stäng av musiken" : "Spela mystisk musik"}
+      >
+        <Music
+          size={28}
+          className={`transition-colors duration-300 ${
+            isPlaying ? "text-yellow-400 animate-pulse" : "text-white"
+          }`}
+        />
+      </button>
+
+
+
+      {/* Audio element */}
+      <audio ref={audioRef} loop>
+        <source src="/music/whimsical.mp3" type="audio/mpeg" />
+        Din webbläsare stödjer inte ljuduppspelning.
+      </audio>
 
       {fortune && (
         <motion.div
