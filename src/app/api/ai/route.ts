@@ -66,7 +66,7 @@ export async function POST(request: Request) {
                 **Stjärntecken:** ${zodiacSign}
                 **Dagens horoskop:** "${responseData.horoscope.horoscope}"
                 Ge ett svar som använder horoskopet för att ge vägledning.
-                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
+                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i max 4 meningar.
             `;
     } else if (readingType === "tarot") {
       const tarotRes = await fetch(
