@@ -42,7 +42,7 @@ export default function HoroscopePage() {
         zodiacSign: sign,
       };
       const result = await getFortune(criteria);
-      setReading(result.horoscope?.horoscope || "Inget horoskop tillgängligt.");
+      setReading(result.aiPrediction || "Inget horoskop tillgängligt.");
     } catch (err: any) {
       setError(err.message ?? "Okänt fel");
     } finally {
@@ -58,63 +58,67 @@ export default function HoroscopePage() {
     : "idle";
 
   return (
-     <main className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-black via-blue-900 to-black text-white font-serif overflow-hidden">
-          <SparklesBackground />
-    
-          <h1 className="text-5xl sm:text-3xl font-bold mb-10 mt-2 tracking-widest text-center 
-  bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-blue-700 to-blue-800
-">
-  Universums råd
-</h1>
+    <main className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-black via-blue-900 to-black text-white font-serif overflow-hidden">
+      <SparklesBackground />
 
-   
-   {/* Chart Wheel */}
+      <h1
+        className="text-5xl sm:text-3xl font-bold mb-10 mt-2 tracking-widest text-center 
+  bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-blue-700 to-blue-800
+"
+      >
+        Universums råd
+      </h1>
+
+      {/* Chart Wheel */}
       <div className="flex justify-center mb-8">
         <motion.img
-         src="/images/chart-wheel.png"
-  alt="Chart Wheel"
-  className="w-80 h-80 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"
-  animate={{
-    rotate: 360,
-    scale: state === "loading" ? [1, 1.05, 1] : 1,
-    filter: state === "loading" ? ["drop-shadow(0 0 10px #fff)", "drop-shadow(0 0 20px #fffa)", "drop-shadow(0 0 10px #fff)"] : "none"
-  }}
-  transition={{
-    rotate: { repeat: Infinity, duration: 40, ease: "linear" },
-    scale:
-      state === "loading"
-        ? { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
-        : { duration: 0.5 },
+          src="/images/chart-wheel.png"
+          alt="Chart Wheel"
+          className="w-80 h-80 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]"
+          animate={{
+            rotate: 360,
+            scale: state === "loading" ? [1, 1.05, 1] : 1,
+            filter:
+              state === "loading"
+                ? [
+                    "drop-shadow(0 0 10px #fff)",
+                    "drop-shadow(0 0 20px #fffa)",
+                    "drop-shadow(0 0 10px #fff)",
+                  ]
+                : "none",
+          }}
+          transition={{
+            rotate: { repeat: Infinity, duration: 40, ease: "linear" },
+            scale:
+              state === "loading"
+                ? { repeat: Infinity, duration: 1.5, ease: "easeInOut" }
+                : { duration: 0.5 },
           }}
         />
-      
 
-     {reading && (
-  <motion.article
-    initial={{ opacity: 0, x: -20 }}
-    animate={{ opacity: 1, x: 0 }}
-    transition={{ duration: 0.5 }}
-    className="absolute left-[60px] top-1/2 -translate-y-1/2 w-80 border rounded-2xl p-4 shadow-xl bg-black/50 backdrop-blur-md text-white leading-relaxed"
-  >
-  
-    {/* Typing animation  */}
-    <p className="drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
-      {reading.split("").map((char, index) => (
-        <motion.span
-          key={index}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: index * 0.02 }} // 30 ms per bokstav
-        >
-          {char}
-        </motion.span>
-      ))}
-    </p>
-  </motion.article>
-)}
-</div>
-
-      
+        {reading && (
+          <motion.article
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="absolute left-[60px] top-1/2 -translate-y-1/2 w-80 border rounded-2xl p-4 shadow-xl bg-black/50 backdrop-blur-md text-white leading-relaxed"
+          >
+            {/* Typing animation  */}
+            <p className="drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
+              {reading.split("").map((char, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: index * 0.02 }} // 30 ms per bokstav
+                >
+                  {char}
+                </motion.span>
+              ))}
+            </p>
+          </motion.article>
+        )}
+      </div>
 
       <div className="grid gap-4">
         {/* Stjärntecken */}
@@ -150,9 +154,6 @@ transition-all duration-300
           {loading ? "Stjärnorna viskar…" : "Stjärnhimlens vägledning"}
         </button>
       </div>
-
-      
-      
     </main>
   );
 }
