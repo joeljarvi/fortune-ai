@@ -3,7 +3,7 @@ import type { FortuneRequest, FortuneResponse } from "@/types/fortune";
 export async function getFortune(
   criteria: FortuneRequest
 ): Promise<FortuneResponse> {
-  const res = await fetch("/api/fortune", {
+  const res = await fetch("/api/ai", {
     method: "POST",
     body: JSON.stringify(criteria),
     headers: { "Content-Type": "application/json" },

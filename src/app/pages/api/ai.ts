@@ -1,11 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
+import { optional, z } from "zod";
 import type { FortuneRequest, FortuneResponse } from "@/types/fortune";
 
 const FortuneRequestSchema = z.object({
   readingType: z.enum(["horoscope", "tarot", "ai"]),
   zodiacSign: z.string(),
-  question: z.string().min(5, "Frågan måste vara minst 5 tecken lång"),
+  question: z
+    .string()
+    .min(5, "Frågan måste vara minst 5 tecken lång")
+    .optional(),
 });
 
 export default async function handler(
@@ -62,7 +65,6 @@ export default async function handler(
 
       prompt = `
                 Agera som en mystisk och insiktsfull spådam. Skapa en personlig förutsägelse baserat på följande information. Svara på svenska.
-                **Användarens fråga:** "${question}"
                 **Stjärntecken:** ${zodiacSign}
                 **Dagens horoskop:** "${responseData.horoscope.horoscope}"
                 Ge ett svar som använder horoskopet för att ge vägledning kring användarens fråga.

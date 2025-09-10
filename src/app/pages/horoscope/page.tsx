@@ -1,19 +1,32 @@
 "use client";
 
 import { useState } from "react";
-import { getHoroscope, Period, Day } from "../actions/ai";
+import type {
+  FortuneRequest,
+  FortuneResponse,
+  ReadingType,
+} from "@/types/fortune";
+import { getFortune } from "@/lib/client";
 
 const ALL_SIGNS = [
-  "aries","taurus","gemini","cancer","leo","virgo",
-  "libra","scorpio","sagittarius","capricorn","aquarius","pisces",
+  "aries",
+  "taurus",
+  "gemini",
+  "cancer",
+  "leo",
+  "virgo",
+  "libra",
+  "scorpio",
+  "sagittarius",
+  "capricorn",
+  "aquarius",
+  "pisces",
 ] as const;
 
-type ZodiacSign = typeof ALL_SIGNS[number];
+type ZodiacSign = (typeof ALL_SIGNS)[number];
 
 export default function HoroscopePage() {
   const [sign, setSign] = useState<ZodiacSign>("aries");
-  const [period, setPeriod] = useState<Period>("daily");
-  const [day, setDay] = useState<Day>("today");
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
@@ -26,9 +39,13 @@ export default function HoroscopePage() {
     setDate(null);
 
     try {
-      const result = await getHoroscope(sign, period, day);
-      setReading(result.text);
-      setDate(result.date);
+      const criteria: FortuneRequest = {
+        readingType: "horoscope",
+        zodiacSign: sign,
+        question: null,
+      };
+      const result = await getFortune(criteria);
+      setReading(result.horoscope?.horoscope || "Inget horoskop tillgängligt.");
     } catch (err: any) {
       setError(err.message ?? "Okänt fel");
     } finally {
@@ -50,39 +67,12 @@ export default function HoroscopePage() {
             className="border rounded p-2"
           >
             {ALL_SIGNS.map((s) => (
-              <option key={s} value={s}>{s}</option>
+              <option key={s} value={s}>
+                {s}
+              </option>
             ))}
           </select>
         </label>
-
-        {/* Period */}
-        <label className="grid gap-1">
-          <span>Period</span>
-          <select
-            value={period}
-            onChange={(e) => setPeriod(e.target.value as Period)}
-            className="border rounded p-2"
-          >
-            <option value="daily">Daglig</option>
-            <option value="monthly">Månads</option>
-          </select>
-        </label>
-
-        {/* Dag (bara om daily) */}
-        {period === "daily" && (
-          <label className="grid gap-1">
-            <span>Dag</span>
-            <select
-              value={day}
-              onChange={(e) => setDay(e.target.value as Day)}
-              className="border rounded p-2"
-            >
-              <option value="today">Idag</option>
-              <option value="yesterday">Igår</option>
-              <option value="tomorrow">Imorgon</option>
-            </select>
-          </label>
-        )}
 
         <button
           onClick={fetchHoroscope}
