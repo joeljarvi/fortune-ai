@@ -90,9 +90,8 @@ export async function POST(request: Request) {
       };
 
       prompt = `
-                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.
-                **Användarens fråga:** "${question}"
-                **Draget tarotkort:** ${tarotCard.name_short} - ${tarotCard.name}
+                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.                
+                **Draget tarotkort:** ${tarotCard.name}
                 **Kortets betydelse (rättvänt):** "${responseData.tarotReading.meaning_up}"
                 **Kortets beskrivning:** "${responseData.tarotReading.desc}"
                 Ge ett svar som väver samman tarotkortets symbolik för att ge vägledning kring användarens fråga.
@@ -100,8 +99,7 @@ export async function POST(request: Request) {
             `;
     } else if (readingType === "ai") {
       prompt = `
-                Agera som en mystisk och insiktsfull spådam. Svara direkt på användarens fråga med visdom och en aning mystik. Svara på svenska.
-                **Användarens fråga:** "${question}"
+                Agera som en mystisk och insiktsfull spådam. Svara direkt till användaren med visdom och en aning mystik. Svara på svenska.                
                 Ge ett svar som är uppmuntrande, insiktsfullt och ger användaren något att reflektera över. Undvik klyschor och ge ett unikt perspektiv. Strukturera svaret i ett enda stycke.
             `;
     }
