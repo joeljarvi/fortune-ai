@@ -4,7 +4,6 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Lenis from "lenis";
-import { TarotCards } from "./Cards";
 import { sendMessage } from "../actions/ai";
 import { TypingText } from "@/components/animate-ui/text/typing";
 
