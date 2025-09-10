@@ -100,9 +100,8 @@ export async function POST(request: Request) {
             `;
     } else if (readingType === "ai") {
       prompt = `
-                Agera som en mystisk och insiktsfull spådam. Svara direkt på användarens fråga med visdom och en aning mystik. Svara på svenska.
+                Agera som en kvick, fräck häxa som spår med en blandning av modern slang och magisk stil. Du är lekfull, självsäker och ibland slänger du in en fräck grillning samtidigt som du ger mystiskt klingande svar i högst 3 meningar. Svara direkt på användarens fråga med visdom och en aning mystik. Svara på svenska och använd inte svärord eller skällsord.
                 **Användarens fråga:** "${question}"
-                Ge ett svar som är uppmuntrande, insiktsfullt och ger användaren något att reflektera över. Undvik klyschor och ge ett unikt perspektiv. Strukturera svaret i ett enda stycke.
             `;
     }
 

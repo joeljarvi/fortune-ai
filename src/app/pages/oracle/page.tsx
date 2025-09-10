@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import SparklesBackground from "@/app/components/SparklesBackground";
 import CrystalBall from "@/app/components/CrystalBall";
+import type { FortuneRequest, FortuneResponse } from "@/types/fortune"; 
 
 export default function Home() {
   const [question, setQuestion] = useState<string>("");
@@ -17,23 +17,26 @@ export default function Home() {
     setFortune("");
 
     try {
-      const res = await fetch("/api/fortune", {
+      const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, readingType: "ai"}),
       });
 
-      type FortuneResponse = { fortune?: string };
+      type FortuneResponse = { aiPrediction?: string };
       const data: FortuneResponse = await res.json();
-      setFortune(data.fortune || "Andarna är tysta...");
+  
+      setFortune(
+        data.aiPrediction || "Andarna är tysta just nu. Försök igen senare."
+      );
     } catch (err) {
       console.error(err);
       setFortune("Något gick fel i den spirituella kontakten.");
     }
-
+  
     setLoading(false);
   };
-
+  
   const crystalState: "idle" | "loading" | "answered" = loading
     ? "loading"
     : fortune
