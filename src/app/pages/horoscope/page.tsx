@@ -61,7 +61,7 @@ export default function HoroscopePage() {
      <main className="relative min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-b from-black via-blue-900 to-black text-white font-serif overflow-hidden">
           <SparklesBackground />
     
-          <h1 className="text-3xl sm:text-5xl font-bold mb-10 mt-2 tracking-widest text-center 
+          <h1 className="text-5xl sm:text-3xl font-bold mb-10 mt-2 tracking-widest text-center 
   bg-clip-text text-transparent bg-gradient-to-r from-blue-900 via-blue-700 to-blue-800
 ">
   Universums råd
@@ -87,12 +87,38 @@ export default function HoroscopePage() {
         : { duration: 0.5 },
           }}
         />
-      </div>
+      
 
+     {reading && (
+  <motion.article
+    initial={{ opacity: 0, x: -20 }}
+    animate={{ opacity: 1, x: 0 }}
+    transition={{ duration: 0.5 }}
+    className="absolute left-[60px] top-1/2 -translate-y-1/2 w-80 border rounded-2xl p-4 shadow-xl bg-black/50 backdrop-blur-md text-white leading-relaxed"
+  >
+  
+    {/* Typing animation  */}
+    <p className="drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
+      {reading.split("").map((char, index) => (
+        <motion.span
+          key={index}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: index * 0.02 }} // 30 ms per bokstav
+        >
+          {char}
+        </motion.span>
+      ))}
+    </p>
+  </motion.article>
+)}
+</div>
+
+      
 
       <div className="grid gap-4">
         {/* Stjärntecken */}
-        <label className="grid gap-1 mb-1 ">
+        <label className="grid gap-1 mb-5 ">
           <span>Din kosmiska vägledare</span>
           <select
             value={sign}
@@ -119,20 +145,14 @@ transition-all duration-300
     hover:scale-105 hover:shadow-[0_0_40px_#f0f] hover:shadow-indigo-400/50
     before:absolute before:inset-0 before:bg-white before:opacity-5 before:rounded-2xl
     after:absolute after:top-0 after:left-[-50%] after:w-1/2 after:h-full
-    after:bg-white after:opacity-10 after:blur-xl after:rotate-45"
+    after:bg-white after:opacity-10 after:blur-xl after:rotate-45 mb-10"
         >
-          {loading ? "Stjärnorna viskar…" : "Stjärnhimlens budskap"}
+          {loading ? "Stjärnorna viskar…" : "Stjärnhimlens vägledning"}
         </button>
       </div>
 
       
-      {error && <p className="text-red-600">{error}</p>}
-      {reading && (
-        <article className="border rounded p-4 shadow leading-relaxed">
-          {date && <p className="text-sm text-gray-500 mb-2">📅 {date}</p>}
-          <p>{reading}</p>
-        </article>
-      )}
+      
     </main>
   );
 }

@@ -6,6 +6,7 @@ import { Sparkles } from "lucide-react";
 import SparklesBackground from "@/app/components/SparklesBackground";
 import CrystalBall from "@/app/components/CrystalBall";
 
+
 export default function Home() {
   const [question, setQuestion] = useState<string>("");
   const [fortune, setFortune] = useState<string>("");

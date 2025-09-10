@@ -65,7 +65,7 @@ export async function POST(request: Request) {
                 Agera som en mystisk och insiktsfull spådam. Skapa en personlig förutsägelse baserat på följande information. Svara på svenska.
                 **Stjärntecken:** ${zodiacSign}
                 **Dagens horoskop:** "${responseData.horoscope.horoscope}"
-                Ge ett svar som använder horoskopet för att ge vägledning kring användarens fråga.
+                Ge ett svar som använder horoskopet för att ge vägledning.
                 Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
             `;
     } else if (readingType === "tarot") {
