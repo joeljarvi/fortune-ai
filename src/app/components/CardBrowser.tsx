@@ -4,32 +4,44 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Lenis from "lenis";
-import { sendMessage } from "../api/ai/route";
-import { TypingText } from "@/components/animate-ui/text/typing";
+import { TypingText } from "@/components/animate-ui/primitives/texts/typing";
 
-const SYSTEM_PROMPT = `You are a mystical tarot reader. 
-Always respond in the tone of a streetwise oracle who explains mystical tarot wisdom in modern Swedish. 
-Be concise, vivid, and a bit dramatic. But maximum 3 sentences and no **`;
+const NUM_SLOTS = 22;
 
 function FlippingCard({
   onReveal,
   onHide,
 }: {
-  onReveal: (card: (typeof TarotCards)[0]) => void;
+  onReveal: (card: any) => void;
   onHide: () => void;
 }) {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [frontCard, setFrontCard] = useState<(typeof TarotCards)[0] | null>(
-    null
-  );
+  const [frontCard, setFrontCard] = useState<any | null>(null);
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (!isFlipped) {
-      const randomCard =
-        TarotCards[Math.floor(Math.random() * TarotCards.length)];
-      setFrontCard(randomCard);
-      setIsFlipped(true);
-      onReveal(randomCard);
+      try {
+        const res = await fetch("/api/ai", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ readingType: "tarot" }),
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          console.error("API error:", res.status, text);
+          throw new Error("Kunde inte hämta tarotkort");
+        }
+
+        const data = await res.json();
+        const card = data.tarotReading;
+        setFrontCard(card);
+        setIsFlipped(true);
+        onReveal(card);
+      } catch (err) {
+        console.error("Error fetching tarot card:", err);
+        alert("Kunde inte hämta tarotkort. Kolla konsolen för mer info.");
+      }
     } else {
       setIsFlipped(false);
       setFrontCard(null);
@@ -53,7 +65,7 @@ function FlippingCard({
           transformStyle: "preserve-3d",
         }}
       >
-        {/* Back */}
+        {/* Baksida */}
         <motion.div
           style={{
             position: "absolute",
@@ -70,7 +82,7 @@ function FlippingCard({
           />
         </motion.div>
 
-        {/* Front */}
+        {/* Framsida */}
         <motion.div
           style={{
             position: "absolute",
@@ -94,40 +106,16 @@ function FlippingCard({
   );
 }
 
-function ProgressBar({
-  scrollYProgress,
-}: {
-  scrollYProgress: ReturnType<typeof useScroll>["scrollYProgress"];
-}) {
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    mass: 0.5,
-  });
-  return (
-    <div className="fixed bottom-0 left-0 right-0 p-4 flex items-center justify-center">
-      <motion.div className="h-2 bg-neutral-800 z-50 w-xl">
-        <motion.div
-          className="h-2 bg-blue-800 origin-left "
-          style={{ scaleX }}
-        />
-      </motion.div>
-    </div>
-  );
-}
-
 export default function CardBrowser() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Till Progress bar
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Smooth scroll
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -144,7 +132,6 @@ export default function CardBrowser() {
     return () => lenis.destroy();
   }, []);
 
-  // ger instruktioner
   useEffect(() => {
     if (!loading && messages.length === 0) {
       setMessages([
@@ -153,39 +140,60 @@ export default function CardBrowser() {
     }
   }, [loading]);
 
-  // När användaren valt kort
-
-  const generateTarotMessage = async (card: (typeof TarotCards)[0]) => {
-    const prompt = `${SYSTEM_PROMPT}\n\nThe user has drawn "${card.name}". 
-Comment on the ${card.description}. Translate it to modern Swedish and make it in 3-4 sentences like you were born and raised in the streets of Södermalm. And never use ** and at the end of your message, instruct the user to draw a new card`;
-
+  const generateTarotMessage = async (card: any) => {
     setLoading(true);
-    setMessages([``]);
+    setMessages([""]);
 
     try {
-      const response = await sendMessage(
-        [{ role: "user", parts: [{ text: prompt }] }],
-        prompt
-      );
-      setMessages([`Tarot-göken: ${response}`]);
-    } catch {
+      const prompt = `The user has drawn "${card.name}". Comment on the ${card.desc}. Translate it to modern Swedish in 3-4 sentences like you were born and raised in the streets of Södermalm. End by telling the user to draw a new card.`;
+
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ readingType: "ai", question: prompt }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        console.error("API error:", res.status, text);
+        throw new Error("Kunde inte hämta AI-svar");
+      }
+
+      const data = await res.json();
+      setMessages([`Tarot-göken: ${data.aiPrediction}`]);
+    } catch (err) {
+      console.error(err);
       setMessages(["⚠️ Nåt gick snett."]);
     } finally {
       setLoading(false);
     }
   };
 
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    mass: 0.5,
+  });
+
   return (
     <>
-      <ProgressBar scrollYProgress={scrollYProgress} />
+      <div className="fixed bottom-0 left-0 right-0 p-4 flex items-center justify-center">
+        <motion.div className="h-2 bg-neutral-800 z-50 w-xl">
+          <motion.div
+            className="h-2 bg-blue-800 origin-left"
+            style={{ scaleX }}
+          />
+        </motion.div>
+      </div>
+
       <div
         ref={containerRef}
-        style={{ height: `${TarotCards.length * 100}vh` }}
+        style={{ height: `${NUM_SLOTS * 100}vh` }}
         className="relative flex flex-col items-center justify-center z-0"
       >
-        {TarotCards.map((_, i) => {
-          const start = i / TarotCards.length;
-          const end = (i + 1) / TarotCards.length;
+        {Array.from({ length: NUM_SLOTS }).map((_, i) => {
+          const start = i / NUM_SLOTS;
+          const end = (i + 1) / NUM_SLOTS;
 
           const scale = useTransform(
             scrollYProgress,

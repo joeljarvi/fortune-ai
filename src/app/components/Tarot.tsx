@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import CardBrowser from "./CardBrowser";
+import { Button } from "@/components/ui/button";
 
 export default function Tarot() {
   const [startGame, setStartGame] = useState(false);
@@ -19,19 +20,15 @@ export default function Tarot() {
     <>
       {/* START SCREEN  */}
       {!startGame ? (
-        <div className="w-full min-h-screen flex flex-col items-center justify-center text-white">
+        <div className="w-full min-h-screen flex flex-col items-center justify-center ">
           <h1 className="text-4xl font-bold mb-4">Tarot</h1>
           <p>
             Välkommen in till Tarot-göken! Ta't lugnt så ska jag bara blanda
             korten
           </p>
-          <button
-            className="p-4 bg-white text-black font-bold cursor-pointer mt-4"
-            onClick={handleStart}
-            disabled={loading}
-          >
+          <Button onClick={handleStart} disabled={loading}>
             {loading ? "Blandar korten..." : "Sätt igång"}
-          </button>
+          </Button>
         </div>
       ) : (
         // GAME SCREEN

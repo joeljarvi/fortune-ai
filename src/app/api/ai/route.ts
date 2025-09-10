@@ -86,17 +86,25 @@ export async function POST(request: Request) {
         name: tarotCard.name,
         meaning_up: tarotCard.meaning_up,
         desc: tarotCard.desc,
-        image: `https://tarotapi.dev/public/images/cards/${tarotCard.value}.jpg`,
+        image: getImagePath(tarotCard),
       };
 
-      prompt = `
-                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.                
-                **Draget tarotkort:** ${tarotCard.name}
-                **Kortets betydelse (rättvänt):** "${responseData.tarotReading.meaning_up}"
-                **Kortets beskrivning:** "${responseData.tarotReading.desc}"
-                Ge ett svar som väver samman tarotkortets symbolik för att ge vägledning kring användarens fråga.
-                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
-            `;
+      function getImagePath(tarotCard) {
+        const fileName =
+          tarotCard.name.replace(/\s+/g, "").toLowerCase() + ".jpeg";
+        console.log("Looking for image:", fileName);
+        return `/images/${fileName}`;
+      }
+
+      const prompt = `Du är en mystisk tarotkortsläsare. 
+      Du svarar alltid som en gatusmart spådam från Södermalm som förklarar tarotkortens visdom på ett modernt, levande och dramatiskt sätt. 
+      Håll det kort och slagkraftigt, 3-4 meningar max, och använd aldrig **. 
+      
+      Användaren har just dragit "${tarotCard.name}".
+      Kortets betydelse: ${responseData.tarotReading.meaning_up}
+      Beskrivning: ${responseData.tarotReading.desc}
+      
+      Översätt detta till modern gatuslang på typ en mening och avsluta alltid med att uppmana användaren att dra ett nytt kort.`;
     } else if (readingType === "ai") {
       prompt = `
                 Agera som en mystisk och insiktsfull spådam. Svara direkt till användaren med visdom och en aning mystik. Svara på svenska.                
