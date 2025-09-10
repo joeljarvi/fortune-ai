@@ -3,7 +3,7 @@ import { z } from "zod";
 import type { FortuneRequest, FortuneResponse } from "@/types/fortune";
 
 const FortuneRequestSchema = z.object({
-  readingType: z.enum(["horoscope", "tarot"]),
+  readingType: z.enum(["horoscope", "tarot", "ai"]),
   zodiacSign: z.string(),
   question: z.string().min(5, "Frågan måste vara minst 5 tecken lång"),
 });
@@ -61,13 +61,13 @@ export default async function handler(
       };
 
       prompt = `
-            Agera som en mystisk och insiktsfull spådam. Skapa en personlig förutsägelse baserat på följande information. Svara på svenska.
-            **Användarens fråga:** "${question}"
-            **Stjärntecken:** ${zodiacSign}
-            **Dagens horoskop:** "${responseData.horoscope.horoscope}"
-            Ge ett svar som använder horoskopet för att ge vägledning kring användarens fråga.
-            Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
-        `;
+                Agera som en mystisk och insiktsfull spådam. Skapa en personlig förutsägelse baserat på följande information. Svara på svenska.
+                **Användarens fråga:** "${question}"
+                **Stjärntecken:** ${zodiacSign}
+                **Dagens horoskop:** "${responseData.horoscope.horoscope}"
+                Ge ett svar som använder horoskopet för att ge vägledning kring användarens fråga.
+                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
+            `;
     } else if (readingType === "tarot") {
       const tarotRes = await fetch(
         "https://tarotapi.dev/api/v1/cards/random?n=1"
@@ -89,14 +89,20 @@ export default async function handler(
       };
 
       prompt = `
-            Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.
-            **Användarens fråga:** "${question}"
-            **Draget tarotkort:** ${tarotCard.name_short} - ${tarotCard.name}
-            **Kortets betydelse (rättvänt):** "${responseData.tarotReading.meaning_up}"
-            **Kortets beskrivning:** "${responseData.tarotReading.desc}"
-            Ge ett svar som väver samman tarotkortets symbolik för att ge vägledning kring användarens fråga.
-            Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
-        `;
+                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.
+                **Användarens fråga:** "${question}"
+                **Draget tarotkort:** ${tarotCard.name_short} - ${tarotCard.name}
+                **Kortets betydelse (rättvänt):** "${responseData.tarotReading.meaning_up}"
+                **Kortets beskrivning:** "${responseData.tarotReading.desc}"
+                Ge ett svar som väver samman tarotkortets symbolik för att ge vägledning kring användarens fråga.
+                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
+            `;
+    } else if (readingType === "ai") {
+      prompt = `
+                Agera som en mystisk och insiktsfull spådam. Svara direkt på användarens fråga med visdom och en aning mystik. Svara på svenska.
+                **Användarens fråga:** "${question}"
+                Ge ett svar som är uppmuntrande, insiktsfullt och ger användaren något att reflektera över. Undvik klyschor och ge ett unikt perspektiv. Strukturera svaret i ett enda stycke.
+            `;
     }
 
     const apiKey = process.env.NEXT_PUBLIC_API_KEY;
