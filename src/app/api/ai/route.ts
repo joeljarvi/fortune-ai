@@ -1,43 +1,40 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { optional, z } from "zod";
+import { z } from "zod";
 import type { FortuneRequest, FortuneResponse } from "@/types/fortune";
 
 const FortuneRequestSchema = z.object({
   readingType: z.enum(["horoscope", "tarot", "ai"]),
-  zodiacSign: z.string(),
+  zodiacSign: z.string().nullable().optional(),
   question: z
     .string()
     .min(5, "Frågan måste vara minst 5 tecken lång")
-    .optional(),
+    .optional()
+    .nullable(),
 });
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
-    return res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-
+export async function POST(request: Request) {
   try {
-    const body = req.body;
+    const body = await request.json();
+    console.log("Received body:", body);
 
     const validationResult = FortuneRequestSchema.safeParse(body);
     if (!validationResult.success) {
-      return res.status(400).json({
-        error: "Ogiltig indata",
-        details: validationResult.error.flatten(),
-      });
+      return Response.json(
+        {
+          error: "Ogiltig indata",
+          details: validationResult.error.flatten(),
+        },
+        { status: 400 }
+      );
     }
 
     const { zodiacSign, question, readingType }: FortuneRequest =
       validationResult.data;
 
     if (readingType === "horoscope" && !zodiacSign) {
-      return res
-        .status(400)
-        .json({ error: "Stjärntecken måste anges för horoskopläsning." });
+      return Response.json(
+        { error: "Stjärntecken måste anges för horoskopläsning." },
+        { status: 400 }
+      );
     }
 
     let prompt = "";
@@ -51,9 +48,10 @@ export default async function handler(
       );
       if (!horoscopeRes.ok) {
         console.error("Horoscope API Error:", await horoscopeRes.text());
-        return res
-          .status(502)
-          .json({ error: "Kunde inte hämta data från horoskoptjänsten." });
+        return Response.json(
+          { error: "Kunde inte hämta data från horoskoptjänsten." },
+          { status: 502 }
+        );
       }
       const horoscopeData = await horoscopeRes.json();
 
@@ -76,9 +74,10 @@ export default async function handler(
       );
       if (!tarotRes.ok) {
         console.error("Tarot API Error:", await tarotRes.text());
-        return res
-          .status(502)
-          .json({ error: "Kunde inte hämta data från tarottjänsten." });
+        return Response.json(
+          { error: "Kunde inte hämta data från tarottjänsten." },
+          { status: 502 }
+        );
       }
       const tarotData = await tarotRes.json();
       const tarotCard = tarotData.cards[0];
@@ -119,9 +118,10 @@ export default async function handler(
     if (!aiResponse.ok) {
       const errorBody = await aiResponse.text();
       console.error("Gemini API Error:", errorBody);
-      return res.status(500).json({
-        error: "Kunde inte generera AI-förutsägelse.",
-      });
+      return Response.json(
+        { error: "Kunde inte generera AI-förutsägelse." },
+        { status: 500 }
+      );
     }
 
     const aiResult = await aiResponse.json();
@@ -129,9 +129,12 @@ export default async function handler(
       aiResult.candidates?.[0]?.content?.parts?.[0]?.text ||
       "Kunde inte tolka sierskans viskningar just nu. Försök igen senare.";
 
-    return res.status(200).json(responseData as FortuneResponse);
+    return Response.json(responseData as FortuneResponse, { status: 200 });
   } catch (error) {
     console.error("Internt serverfel:", error);
-    return res.status(500).json({ error: "Ett oväntat fel inträffade." });
+    return Response.json(
+      { error: "Ett oväntat fel inträffade." },
+      { status: 500 }
+    );
   }
 }

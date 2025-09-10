@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Lenis from "lenis";
-import { sendMessage } from "../actions/ai";
+import { sendMessage } from "../api/ai/route";
 import { TypingText } from "@/components/animate-ui/text/typing";
 
 const SYSTEM_PROMPT = `You are a mystical tarot reader. 

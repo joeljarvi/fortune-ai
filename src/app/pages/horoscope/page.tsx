@@ -9,24 +9,24 @@ import type {
 import { getFortune } from "@/lib/client";
 
 const ALL_SIGNS = [
-  "aries",
-  "taurus",
-  "gemini",
-  "cancer",
-  "leo",
-  "virgo",
-  "libra",
-  "scorpio",
-  "sagittarius",
-  "capricorn",
-  "aquarius",
-  "pisces",
+  "Aries",
+  "Taurus",
+  "Gemini",
+  "Cancer",
+  "Leo",
+  "Virgo",
+  "Libra",
+  "Scorpio",
+  "Sagittarius",
+  "Capricorn",
+  "Aquarius",
+  "Pisces",
 ] as const;
 
 type ZodiacSign = (typeof ALL_SIGNS)[number];
 
 export default function HoroscopePage() {
-  const [sign, setSign] = useState<ZodiacSign>("aries");
+  const [sign, setSign] = useState<ZodiacSign>("Aries");
   const [loading, setLoading] = useState(false);
   const [reading, setReading] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
@@ -42,7 +42,6 @@ export default function HoroscopePage() {
       const criteria: FortuneRequest = {
         readingType: "horoscope",
         zodiacSign: sign,
-        question: null,
       };
       const result = await getFortune(criteria);
       setReading(result.horoscope?.horoscope || "Inget horoskop tillgängligt.");

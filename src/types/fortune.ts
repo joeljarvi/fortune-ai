@@ -2,8 +2,8 @@ export type ReadingType = "horoscope" | "tarot" | "ai";
 
 export type FortuneRequest = {
   readingType: ReadingType;
-  zodiacSign: string | null;
-  question: string | null;
+  zodiacSign?: string | null | undefined;
+  question?: string | null | undefined;
 };
 
 export type FortuneResponse = {
