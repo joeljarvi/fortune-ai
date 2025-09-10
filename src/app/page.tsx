@@ -61,13 +61,13 @@ export default function Home() {
         </p>
         <div className="flex space-x-4">
           <Link href="/pages/oracle">
-            <Button>page1</Button>
+            <Button>Oraklet</Button>
           </Link>
           <Link href="/pages/tarot">
-            <Button>page2</Button>
+            <Button>Tarotkort</Button>
           </Link>
           <Link href="/pages/horoscope">
-            <Button>page3</Button>
+            <Button>Horoskop</Button>
           </Link>
         </div>
       </div>
