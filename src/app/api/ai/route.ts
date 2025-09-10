@@ -65,8 +65,8 @@ export async function POST(request: Request) {
                 Agera som en mystisk och insiktsfull spådam. Skapa en personlig förutsägelse baserat på följande information. Svara på svenska.
                 **Stjärntecken:** ${zodiacSign}
                 **Dagens horoskop:** "${responseData.horoscope.horoscope}"
-                Ge ett svar som använder horoskopet för att ge vägledning kring användarens fråga.
-                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i ett enda stycke.
+                Ge ett svar som använder horoskopet för att ge vägledning.
+                Svaret ska vara uppmuntrande, mystiskt och ge användaren något att reflektera över. Strukturera svaret i max 4 meningar.
             `;
     } else if (readingType === "tarot") {
       const tarotRes = await fetch(
@@ -90,9 +90,8 @@ export async function POST(request: Request) {
       };
 
       prompt = `
-                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.
-                **Användarens fråga:** "${question}"
-                **Draget tarotkort:** ${tarotCard.name_short} - ${tarotCard.name}
+                Agera som en mystisk och insiktsfull spådam. Tolka ett tarotkort för att besvara en persons fråga. Svara på svenska.                
+                **Draget tarotkort:** ${tarotCard.name}
                 **Kortets betydelse (rättvänt):** "${responseData.tarotReading.meaning_up}"
                 **Kortets beskrivning:** "${responseData.tarotReading.desc}"
                 Ge ett svar som väver samman tarotkortets symbolik för att ge vägledning kring användarens fråga.

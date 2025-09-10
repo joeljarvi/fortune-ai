@@ -7,6 +7,7 @@ import CrystalBall from "@/app/components/CrystalBall";
 import { Music } from "lucide-react"
 import type { FortuneRequest, FortuneResponse } from "@/types/fortune"; 
 
+
 export default function Home() {
   const [question, setQuestion] = useState<string>("");
   const [fortune, setFortune] = useState<string>("");
