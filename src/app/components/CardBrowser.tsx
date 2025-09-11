@@ -178,7 +178,7 @@ export default function CardBrowser() {
   return (
     <>
       <div className="fixed bottom-0 left-0 right-0 p-4 flex items-center justify-center">
-        <motion.div className="h-2 bg-neutral-800 z-50 w-xl">
+        <motion.div className="h-2 bg-neutral-200 z-50 w-xl">
           <motion.div
             className="h-2 bg-blue-800 origin-left"
             style={{ scaleX }}
@@ -229,13 +229,13 @@ export default function CardBrowser() {
           <TypingText
             key={i}
             text={m}
-            className="shadow-sm mb-2 font-bold bg-white w-md lg:w-xl"
+            className="shadow-sm mb-2 font-bold bg-black text-white w-md lg:w-xl"
           />
         ))}
         {loading && (
           <TypingText
             text="Tarot-Göken funderar..."
-            className="shadow-sm mb-2 font-bold bg-white w-md lg:w-xl"
+            className="shadow-sm mb-2 font-bold bg-black text-white w-md lg:w-xl"
           />
         )}
       </div>

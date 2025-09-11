@@ -20,9 +20,9 @@ export default function Tarot() {
     <>
       {/* START SCREEN  */}
       {!startGame ? (
-        <div className="w-full min-h-screen flex flex-col items-center justify-center ">
-          <h1 className="text-4xl font-bold mb-4">Tarot</h1>
-          <p>
+        <div className="w-full min-h-screen flex flex-col items-center justify-center gap-8">
+          <h1 className="text-4xl font-bold">Tarot</h1>
+          <p className="max-w-lg">
             Välkommen in till Tarot-göken! Ta't lugnt så ska jag bara blanda
             korten
           </p>
