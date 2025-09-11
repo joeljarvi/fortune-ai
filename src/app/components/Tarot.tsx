@@ -22,7 +22,7 @@ export default function Tarot() {
       {!startGame ? (
         <>
           <div className="absolute top-0 w-full min-h-screen flex flex-col items-center justify-center gap-8 bg-cover bg-center bg-[url('/images/tarot-page-background.jpg')] z-0"></div>
-          <div className="relative w-full min-h-screen z-10 flex flex-col items-center justify-center gap-4 backdrop-blur-md">
+          <div className="relative w-full min-h-screen z-10 flex flex-col items-center justify-center gap-4 bg-purple-600/30 backdrop-blur-md">
             <h1 className="text-4xl font-bold text-white">Tarot</h1>
             <p className="max-w-md text-center text-white">
               Välkommen in till Tarot-göken! Ta't lugnt så ska jag bara blanda
