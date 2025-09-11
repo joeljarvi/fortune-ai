@@ -20,18 +20,22 @@ export default function Tarot() {
     <>
       {/* START SCREEN  */}
       {!startGame ? (
-        <div className="w-full min-h-screen flex flex-col items-center justify-center gap-8">
-          <h1 className="text-4xl font-bold">Tarot</h1>
-          <p className="max-w-lg">
-            Välkommen in till Tarot-göken! Ta't lugnt så ska jag bara blanda
-            korten
-          </p>
-          <Button onClick={handleStart} disabled={loading}>
-            {loading ? "Blandar korten..." : "Sätt igång"}
-          </Button>
-        </div>
+        <>
+          <div className="absolute top-0 w-full min-h-screen flex flex-col items-center justify-center gap-8 bg-cover bg-center bg-[url('/images/tarot-page-background.jpg')] z-0"></div>
+          <div className="relative w-full min-h-screen z-10 flex flex-col items-center justify-center gap-4 backdrop-blur-md">
+            <h1 className="text-4xl font-bold text-white">Tarot</h1>
+            <p className="max-w-md text-center text-white">
+              Välkommen in till Tarot-göken! Ta't lugnt så ska jag bara blanda
+              korten...
+            </p>
+            <Button onClick={handleStart} disabled={loading}>
+              {loading ? "Ok nu blandar vi verkligen korten..." : "Sätt igång"}
+            </Button>
+          </div>
+        </>
       ) : (
         // GAME SCREEN
+
         <CardBrowser />
       )}
     </>

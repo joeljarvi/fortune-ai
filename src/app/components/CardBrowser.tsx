@@ -189,7 +189,7 @@ export default function CardBrowser() {
       <div
         ref={containerRef}
         style={{ height: `${NUM_SLOTS * 100}vh` }}
-        className="relative flex flex-col items-center justify-center z-0"
+        className="relative flex flex-col items-center justify-center z-0 "
       >
         {Array.from({ length: NUM_SLOTS }).map((_, i) => {
           const start = i / NUM_SLOTS;
