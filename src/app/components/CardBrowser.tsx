@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import Image from "next/image";
 import Lenis from "lenis";
 import { TypingText } from "@/components/animate-ui/primitives/texts/typing";
+import SparklesBackground from "./SparklesBackground";
 
 const NUM_SLOTS = 22;
 
@@ -78,7 +79,7 @@ function FlippingCard({
             src="/images/tarot-back-3.png"
             alt="tarot-back"
             fill
-            className="object-cover rounded-2xl border-6 border-blue-900"
+            className="object-cover rounded-2xl border-6 border-purple-700"
           />
         </motion.div>
 
@@ -97,7 +98,7 @@ function FlippingCard({
               src={frontCard.image}
               alt={frontCard.name}
               fill
-              className="object-cover rounded-2xl border-6 border-blue-900"
+              className="object-cover rounded-2xl border-6 border-purple-700"
             />
           )}
         </motion.div>
@@ -177,10 +178,10 @@ export default function CardBrowser() {
 
   return (
     <>
-      <div className="fixed bottom-0 left-0 right-0 p-4 flex items-center justify-center">
-        <motion.div className="h-2 bg-neutral-200 z-50 w-xl">
+      <div className="fixed bottom-0 left-0 right-0 p-4 flex items-center justify-center z-30">
+        <motion.div className="h-2 bg-purple-300 z-40 w-xl">
           <motion.div
-            className="h-2 bg-blue-800 origin-left"
+            className="h-2 bg-purple-700 origin-left z-60"
             style={{ scaleX }}
           />
         </motion.div>
@@ -189,8 +190,10 @@ export default function CardBrowser() {
       <div
         ref={containerRef}
         style={{ height: `${NUM_SLOTS * 100}vh` }}
-        className="relative flex flex-col items-center justify-center z-0 "
+        className="relative flex flex-col items-center justify-center z-0 bg-purple-900 "
       >
+        {" "}
+        <SparklesBackground />
         {Array.from({ length: NUM_SLOTS }).map((_, i) => {
           const start = i / NUM_SLOTS;
           const end = (i + 1) / NUM_SLOTS;
@@ -210,7 +213,7 @@ export default function CardBrowser() {
             <motion.div
               key={i}
               style={{ scale, rotate }}
-              className="sticky top-0 z-10 flex items-center justify-center h-screen"
+              className="sticky top-0 z-10 flex items-center justify-center h-screen w-full"
             >
               <FlippingCard
                 onReveal={generateTarotMessage}
