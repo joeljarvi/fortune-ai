@@ -79,8 +79,20 @@ export async function POST(request: Request) {
           { status: 502 }
         );
       }
-      const tarotData = await tarotRes.json();
+      type TarotCard = NonNullable<FortuneResponse["tarotReading"]>;
+
+      type TarotApiResponse = {
+        cards: TarotCard[];
+      };
+
+      const tarotData = (await tarotRes.json()) as TarotApiResponse;
       const tarotCard = tarotData.cards[0];
+
+      function getImagePath(card: TarotCard) {
+        const fileName = card.name.replace(/\s+/g, "").toLowerCase() + ".jpeg";
+        console.log("Looking for image:", fileName);
+        return `/images/${fileName}`;
+      }
 
       responseData.tarotReading = {
         name: tarotCard.name,
@@ -88,13 +100,6 @@ export async function POST(request: Request) {
         desc: tarotCard.desc,
         image: getImagePath(tarotCard),
       };
-
-      function getImagePath(tarotCard) {
-        const fileName =
-          tarotCard.name.replace(/\s+/g, "").toLowerCase() + ".jpeg";
-        console.log("Looking for image:", fileName);
-        return `/images/${fileName}`;
-      }
 
       const prompt = `Du är en mystisk tarotkortsläsare. 
       Du svarar alltid som en gatusmart spådam från Södermalm som förklarar tarotkortens visdom på ett modernt, levande och dramatiskt sätt. 
